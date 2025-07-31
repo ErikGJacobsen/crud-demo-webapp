@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Demo WebApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <header>
+            <h1>CRUD Demo WebApp</h1>
+            <nav class="nav nav-pills my-3">
+                <a class="nav-link active" href="/">Items</a>
+                <a class="nav-link" href="/plan">View Plan</a>
+            </nav>
+        </header>
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h5 mb-0">Add New Item</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="item-form">
+                            <div class="mb-3">
+                                <label for="name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="date" class="form-label">Date (dd-mm-yyyy)</label>
+                                <input type="text" class="form-control" id="date" placeholder="31-07-2025" required>
+                                <div class="form-text">Format: dd-mm-yyyy</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Item</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6" id="edit-container" style="display: none;">
+                <div class="card">
+                    <div class="card-header bg-warning text-dark">
+                        <h2 class="h5 mb-0">Edit Item</h2>
+                    </div>
+                    <div class="card-body">
+                        <form id="edit-form">
+                            <input type="hidden" id="edit-id">
+                            <div class="mb-3">
+                                <label for="edit-name" class="form-label">Name</label>
+                                <input type="text" class="form-control" id="edit-name" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="edit-date" class="form-label">Date (dd-mm-yyyy)</label>
+                                <input type="text" class="form-control" id="edit-date" placeholder="31-07-2025" required>
+                                <div class="form-text">Format: dd-mm-yyyy</div>
+                            </div>
+                            <div class="d-flex justify-content-between">
+                                <button type="submit" class="btn btn-warning">Update Item</button>
+                                <button type="button" class="btn btn-secondary" id="cancel-edit">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h2 class="h5 mb-0">Items List</h2>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Name</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="items-list">
+                            <!-- Items will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+                <div id="no-items" class="alert alert-info" style="display: none;">
+                    No items found. Add a new item above.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success/Error messages -->
+    <div id="message-container" class="toast-container position-fixed bottom-0 end-0 p-3">
+        <!-- Messages will be added here dynamically -->
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+/* Custom styles for CRUD Demo WebApp */
+
+body {
+    background-color: #f8f9fa;
+}
+
+header {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+}
+
+.card {
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    margin-bottom: 1.5rem;
+}
+
+.card-header {
+    font-weight: 500;
+}
+
+.table th {
+    border-top: none;
+}
+
+.btn-action {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+}
+
+.architecture-diagram {
+    overflow-x: auto;
+}
+
+.architecture-diagram pre {
+    color: #495057;
+}
+
+/* Toast messages */
+.toast {
+    opacity: 1;
+}
+
+/* Animation for new/updated items */
+.highlight {
+    animation: highlight 2s ease-in-out;
+}
+
+@keyframes highlight {
+    0% {
+        background-color: #fff3cd;
+    }
+    100% {
+        background-color: transparent;
+    }
+}

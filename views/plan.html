@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Plan - CRUD Demo WebApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <header>
+            <h1>Project Plan</h1>
+            <nav class="nav nav-pills my-3">
+                <a class="nav-link" href="/">Items</a>
+                <a class="nav-link active" href="/plan">View Plan</a>
+            </nav>
+        </header>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h5 mb-0">Demo CRUD API & Web Frontend Plan</h2>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="h5">Notes</h3>
+                        <ul>
+                            <li>Demo CRUD API with a simple data model: [id, name, date]</li>
+                            <li>Date format is dd-mm-yyyy</li>
+                            <li>Data is stored in memory with optional file-based storage</li>
+                            <li>Applications are deployed on an OpenShift cluster</li>
+                            <li>Node.js with Express is used for both API and frontend</li>
+                            <li>The API is available at: <a href="https://crud-demo-api-git-erikfirsttest.apps.dekradk.dekra.nu" target="_blank">https://crud-demo-api-git-erikfirsttest.apps.dekradk.dekra.nu</a></li>
+                        </ul>
+
+                        <h3 class="h5 mt-4">Completed Tasks for API</h3>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item list-group-item-success">✅ Design the data model (id, name, date with dd-mm-yyyy format)</li>
+                            <li class="list-group-item list-group-item-success">✅ Select Node.js Express as the framework</li>
+                            <li class="list-group-item list-group-item-success">✅ Create project directory and initialize Node.js project</li>
+                            <li class="list-group-item list-group-item-success">✅ Implement in-memory data storage with file-based option</li>
+                            <li class="list-group-item list-group-item-success">✅ Implement CRUD endpoints (Create, Read, Update, Delete)</li>
+                            <li class="list-group-item list-group-item-success">✅ Add date validation and formatting</li>
+                            <li class="list-group-item list-group-item-success">✅ Add documentation and OpenShift deployment instructions</li>
+                            <li class="list-group-item list-group-item-success">✅ Create GitHub repository and push code</li>
+                            <li class="list-group-item list-group-item-success">✅ Deploy to OpenShift and verify functionality</li>
+                        </ul>
+
+                        <h3 class="h5 mt-4">Frontend Tasks</h3>
+                        <ul class="list-group mb-3">
+                            <li class="list-group-item list-group-item-success">✅ Create frontend project structure</li>
+                            <li class="list-group-item list-group-item-primary">🔄 Implement CRUD UI (Create, Read, Update, Delete)</li>
+                            <li class="list-group-item list-group-item-primary">🔄 Add page to display project plan</li>
+                            <li class="list-group-item">⬜ Prepare frontend for OpenShift deployment</li>
+                            <li class="list-group-item">⬜ Create GitHub repository and push code</li>
+                            <li class="list-group-item">⬜ Deploy frontend to OpenShift and verify integration</li>
+                        </ul>
+
+                        <h3 class="h5 mt-4">System Architecture</h3>
+                        <div class="architecture-diagram p-3 mb-3 border rounded bg-light">
+                            <pre class="mb-0">
+┌────────────────────┐           ┌────────────────────┐
+│                    │           │                    │
+│   CRUD Demo WebApp │           │   CRUD Demo API    │
+│   (Frontend)       │◄─────────►│   (Backend)        │
+│                    │    API    │                    │
+│                    │   Calls   │                    │
+└────────────────────┘           └────────────────────┘
+     ▲                                  ▲
+     │                                  │
+     │ User                             │ Data Storage
+     │ Interaction                      │ (In-memory/File)
+     ▼                                  ▼
+┌────────────────────┐           ┌────────────────────┐
+│                    │           │                    │
+│   Web Browser      │           │   Items Collection │
+│                    │           │   [id, name, date] │
+└────────────────────┘           └────────────────────┘
+            </pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>
