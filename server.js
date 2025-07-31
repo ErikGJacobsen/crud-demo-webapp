@@ -3,6 +3,7 @@ const path = require('path');
 const axios = require('axios');
 const bodyParser = require('body-parser');
 const moment = require('moment');
+const https = require('https');
 
 // Initialize express app
 const app = express();
@@ -11,6 +12,11 @@ const IP = process.env.IP || '0.0.0.0';
 
 // API URL - update this to point to your deployed API
 const API_URL = process.env.API_URL || 'https://crud-demo-api-git-erikfirsttest.apps.dekradk.dekra.nu';
+
+// Configure axios to ignore SSL certificate errors (for development only)
+const httpsAgent = new https.Agent({
+  rejectUnauthorized: false
+});
 
 // Middleware
 app.use(bodyParser.json());
@@ -34,7 +40,7 @@ app.get('/plan', (req, res) => {
 // API proxy routes
 app.get('/api/items', async (req, res) => {
   try {
-    const response = await axios.get(`${API_URL}/api/items`);
+    const response = await axios.get(`${API_URL}/api/items`, { httpsAgent });
     res.json(response.data);
   } catch (error) {
     console.error('Error fetching items:', error.message);
@@ -44,7 +50,7 @@ app.get('/api/items', async (req, res) => {
 
 app.get('/api/items/:id', async (req, res) => {
   try {
-    const response = await axios.get(`${API_URL}/api/items/${req.params.id}`);
+    const response = await axios.get(`${API_URL}/api/items/${req.params.id}`, { httpsAgent });
     res.json(response.data);
   } catch (error) {
     console.error(`Error fetching item ${req.params.id}:`, error.message);
@@ -59,7 +65,7 @@ app.post('/api/items', async (req, res) => {
       return res.status(400).json({ error: 'Date must be in dd-mm-yyyy format' });
     }
     
-    const response = await axios.post(`${API_URL}/api/items`, req.body);
+    const response = await axios.post(`${API_URL}/api/items`, req.body, { httpsAgent });
     res.status(201).json(response.data);
   } catch (error) {
     console.error('Error creating item:', error.message);
@@ -74,7 +80,7 @@ app.put('/api/items/:id', async (req, res) => {
       return res.status(400).json({ error: 'Date must be in dd-mm-yyyy format' });
     }
     
-    const response = await axios.put(`${API_URL}/api/items/${req.params.id}`, req.body);
+    const response = await axios.put(`${API_URL}/api/items/${req.params.id}`, req.body, { httpsAgent });
     res.json(response.data);
   } catch (error) {
     console.error(`Error updating item ${req.params.id}:`, error.message);
@@ -84,7 +90,7 @@ app.put('/api/items/:id', async (req, res) => {
 
 app.delete('/api/items/:id', async (req, res) => {
   try {
-    const response = await axios.delete(`${API_URL}/api/items/${req.params.id}`);
+    const response = await axios.delete(`${API_URL}/api/items/${req.params.id}`, { httpsAgent });
     res.json(response.data);
   } catch (error) {
     console.error(`Error deleting item ${req.params.id}:`, error.message);
