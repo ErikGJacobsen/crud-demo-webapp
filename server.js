@@ -1,3 +1,7 @@
+// Disable SSL certificate validation globally for demos/development
+// WARNING: This is not recommended for production use
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 const express = require('express');
 const path = require('path');
 const axios = require('axios');
@@ -13,7 +17,8 @@ const IP = process.env.IP || '0.0.0.0';
 // API URL - update this to point to your deployed API
 const API_URL = process.env.API_URL || 'https://crud-demo-api-git-erikfirsttest.apps.dekradk.dekra.nu';
 
-// Configure axios to ignore SSL certificate errors (for development only)
+// Note: SSL certificate validation is already disabled globally at the top of the file
+// This agent is kept for additional safety
 const httpsAgent = new https.Agent({
   rejectUnauthorized: false
 });
@@ -107,4 +112,5 @@ app.get('/health', (req, res) => {
 app.listen(PORT, IP, () => {
   console.log(`Web frontend is running on ${IP}:${PORT}`);
   console.log(`Connected to API at: ${API_URL}`);
+  console.log('SSL certificate validation is disabled for development purposes');
 });
