@@ -8,6 +8,7 @@ const axios = require('axios');
 const bodyParser = require('body-parser');
 const moment = require('moment');
 const https = require('https');
+const packageInfo = require('./package.json');
 
 // Initialize express app
 const app = express();
@@ -35,11 +36,11 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Routes
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'index.html'));
+  res.render(path.join(__dirname, 'views', 'index.html'), { version: packageInfo.version });
 });
 
 app.get('/plan', (req, res) => {
-  res.sendFile(path.join(__dirname, 'views', 'plan.html'));
+  res.render(path.join(__dirname, 'views', 'plan.html'), { version: packageInfo.version });
 });
 
 // API proxy routes
