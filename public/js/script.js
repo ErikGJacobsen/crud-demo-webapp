@@ -22,6 +22,17 @@ document.addEventListener('DOMContentLoaded', function() {
     // Load version number
     loadVersion();
     
+    // Initialize date dropdowns if they exist
+    const dateDropdown = document.getElementById('date');
+    const editDateDropdown = document.getElementById('edit-date');
+    
+    if (dateDropdown) {
+        populateDateDropdown(dateDropdown);
+    }
+    
+    if (editDateDropdown) {
+        populateDateDropdown(editDateDropdown);
+    }
 
     // Load items when the page loads
     if (document.getElementById('items-list')) {
@@ -219,7 +230,10 @@ async function showEditForm(id) {
     
     document.getElementById('edit-id').value = item.id;
     document.getElementById('edit-name').value = item.name;
-    document.getElementById('edit-date').value = item.date;
+    
+    const editDateDropdown = document.getElementById('edit-date');
+    // Repopulate date dropdown with the selected date
+    populateDateDropdown(editDateDropdown, item.date);
     
     document.getElementById('edit-container').style.display = 'block';
 }

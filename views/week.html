@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Week View - CRUD Demo WebApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <div class="container mt-4">
+        <header>
+            <h1>Week View</h1>
+            <nav class="nav nav-pills my-3">
+                <a class="nav-link" href="/">Items</a>
+                <a class="nav-link" href="/plan">View Plan</a>
+                <a class="nav-link active" href="/week">Week View</a>
+            </nav>
+        </header>
+
+        <div class="row mb-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-primary text-white">
+                        <h2 class="h5 mb-0">2-Week Calendar View</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-12">
+                                <h3 class="h5">Current Week</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="current-week">
+                                        <thead>
+                                            <tr>
+                                                <th>Monday</th>
+                                                <th>Tuesday</th>
+                                                <th>Wednesday</th>
+                                                <th>Thursday</th>
+                                                <th>Friday</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="current-week-dates">
+                                                <!-- Dates will be populated by JavaScript -->
+                                            </tr>
+                                            <tr id="current-week-items" class="week-items">
+                                                <!-- Items will be populated by JavaScript -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-12">
+                                <h3 class="h5">Next Week</h3>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered" id="next-week">
+                                        <thead>
+                                            <tr>
+                                                <th>Monday</th>
+                                                <th>Tuesday</th>
+                                                <th>Wednesday</th>
+                                                <th>Thursday</th>
+                                                <th>Friday</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr id="next-week-dates">
+                                                <!-- Dates will be populated by JavaScript -->
+                                            </tr>
+                                            <tr id="next-week-items" class="week-items">
+                                                <!-- Items will be populated by JavaScript -->
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="mt-5 pt-3 text-center text-muted border-top">
+            <p>CRUD Demo WebApp <span id="version-display" class="badge bg-secondary">Loading...</span></p>
+        </footer>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.4/moment.min.js"></script>
+    <script src="/js/script.js"></script>
+    <script src="/js/week.js"></script>
+</body>
+</html>

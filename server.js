@@ -43,6 +43,10 @@ app.get('/plan', (req, res) => {
   res.sendFile(path.join(__dirname, 'views', 'plan.html'));
 });
 
+app.get('/week', (req, res) => {
+  res.sendFile(path.join(__dirname, 'views', 'week.html'));
+});
+
 // Version endpoint for client-side access
 app.get('/api/version', (req, res) => {
   res.json({ version: packageInfo.version });
