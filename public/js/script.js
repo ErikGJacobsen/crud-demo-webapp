@@ -1,6 +1,28 @@
 // CRUD Demo WebApp - Main JavaScript
 
+// Fetch and display version number from API
+async function loadVersion() {
+    try {
+        const response = await fetch('/api/version');
+        const data = await response.json();
+        const versionDisplay = document.getElementById('version-display');
+        if (versionDisplay) {
+            versionDisplay.textContent = `v${data.version}`;
+        }
+    } catch (error) {
+        console.error('Error fetching version:', error);
+        const versionDisplay = document.getElementById('version-display');
+        if (versionDisplay) {
+            versionDisplay.textContent = 'v?.?.?';
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', function() {
+    // Load version number
+    loadVersion();
+    
+
     // Load items when the page loads
     if (document.getElementById('items-list')) {
         loadItems();

@@ -36,11 +36,16 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Routes
 app.get('/', (req, res) => {
-  res.render(path.join(__dirname, 'views', 'index.html'), { version: packageInfo.version });
+  res.sendFile(path.join(__dirname, 'views', 'index.html'));
 });
 
 app.get('/plan', (req, res) => {
-  res.render(path.join(__dirname, 'views', 'plan.html'), { version: packageInfo.version });
+  res.sendFile(path.join(__dirname, 'views', 'plan.html'));
+});
+
+// Version endpoint for client-side access
+app.get('/api/version', (req, res) => {
+  res.json({ version: packageInfo.version });
 });
 
 // API proxy routes
