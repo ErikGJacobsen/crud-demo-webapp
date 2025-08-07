@@ -4,8 +4,11 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize the week view calendar
     initWeekView();
     
-    // Load items for the calendar
-    loadItemsForCalendar();
+    // Subscribe to the AppState for items
+    AppState.subscribe('items', updateCalendarWithItems);
+    
+    // Initial load of items through AppState
+    AppState.actions.loadItems();
 });
 
 // Initialize the week view with dates
@@ -59,34 +62,26 @@ function highlightToday() {
     });
 }
 
-// Load items from the API and display them in the calendar
-async function loadItemsForCalendar() {
-    try {
-        // Get all items from the API
-        const response = await fetch('/api/items');
-        const items = await response.json();
+// Update calendar with items from the AppState
+function updateCalendarWithItems(items) {
+    // Clear existing items
+    document.getElementById('current-week-items').innerHTML = '<td></td>'.repeat(5);
+    document.getElementById('next-week-items').innerHTML = '<td></td>'.repeat(5);
+    
+    if (items && items.length > 0) {
+        // Group items by date
+        const itemsByDate = {};
         
-        // Clear existing items
-        document.getElementById('current-week-items').innerHTML = '<td></td>'.repeat(5);
-        document.getElementById('next-week-items').innerHTML = '<td></td>'.repeat(5);
+        items.forEach(item => {
+            if (!itemsByDate[item.date]) {
+                itemsByDate[item.date] = [];
+            }
+            itemsByDate[item.date].push(item);
+        });
         
-        if (items && items.length > 0) {
-            // Group items by date
-            const itemsByDate = {};
-            
-            items.forEach(item => {
-                if (!itemsByDate[item.date]) {
-                    itemsByDate[item.date] = [];
-                }
-                itemsByDate[item.date].push(item);
-            });
-            
-            // Add items to the calendar
-            addItemsToCalendar('current-week-dates', 'current-week-items', itemsByDate);
-            addItemsToCalendar('next-week-dates', 'next-week-items', itemsByDate);
-        }
-    } catch (error) {
-        console.error('Error loading items for calendar:', error);
+        // Add items to the calendar
+        addItemsToCalendar('current-week-dates', 'current-week-items', itemsByDate);
+        addItemsToCalendar('next-week-dates', 'next-week-items', itemsByDate);
     }
 }
 
