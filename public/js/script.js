@@ -1,26 +1,21 @@
 // CRUD Demo WebApp - Main JavaScript
 
-// Fetch and display version number from API
-async function loadVersion() {
-    try {
-        const response = await fetch('/api/version');
-        const data = await response.json();
-        const versionDisplay = document.getElementById('version-display');
-        if (versionDisplay) {
-            versionDisplay.textContent = `v${data.version}`;
-        }
-    } catch (error) {
-        console.error('Error fetching version:', error);
-        const versionDisplay = document.getElementById('version-display');
-        if (versionDisplay) {
-            versionDisplay.textContent = 'v?.?.?';
-        }
+// Display version number from AppState
+function displayVersion(version) {
+    const versionDisplay = document.getElementById('version-display');
+    if (versionDisplay) {
+        versionDisplay.textContent = `v${version || '?.?.?'}`;
     }
 }
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Load version number
-    loadVersion();
+    // Subscribe to state changes
+    AppState.subscribe('version', displayVersion);
+    AppState.subscribe('items', displayItems);
+    AppState.subscribe('ui', handleUIStateChange);
+    
+    // Initialize state
+    AppState.actions.loadVersion();
     
     // Initialize date dropdowns if they exist
     const dateDropdown = document.getElementById('date');
@@ -36,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Load items when the page loads
     if (document.getElementById('items-list')) {
-        loadItems();
+        AppState.actions.loadItems();
     }
 
     // Form submission for adding new items
@@ -47,7 +42,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = document.getElementById('name').value;
             const date = document.getElementById('date').value;
             
-            createItem({ name, date });
+            AppState.actions.createItem({ name, date })
+                .then(() => {
+                    // Reset the form
+                    document.getElementById('name').value = '';
+                    document.getElementById('date').value = '';
+                });
         });
     }
 
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const name = document.getElementById('edit-name').value;
             const date = document.getElementById('edit-date').value;
             
-            updateItem(id, { name, date });
+            AppState.actions.updateItem(id, { name, date });
         });
     }
 
@@ -73,128 +73,13 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 
-// API Functions
-async function loadItems() {
-    try {
-        const response = await fetch('/api/items');
-        const items = await response.json();
-        
-        displayItems(items);
-    } catch (error) {
-        showMessage('Error loading items', 'danger');
-        console.error('Error loading items:', error);
-    }
-}
-
-async function createItem(item) {
-    try {
-        const response = await fetch('/api/items', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item)
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to create item');
-        }
-        
-        const newItem = await response.json();
-        
-        // Reset the form
-        document.getElementById('name').value = '';
-        document.getElementById('date').value = '';
-        
-        // Reload items or add the new item to the list
-        loadItems();
-        
-        showMessage('Item created successfully', 'success');
-    } catch (error) {
-        showMessage(error.message, 'danger');
-        console.error('Error creating item:', error);
-    }
-}
-
-async function getItem(id) {
-    try {
-        const response = await fetch(`/api/items/${id}`);
-        if (!response.ok) {
-            throw new Error('Item not found');
-        }
-        
-        return await response.json();
-    } catch (error) {
-        showMessage(error.message, 'danger');
-        console.error(`Error fetching item ${id}:`, error);
-        return null;
-    }
-}
-
-async function updateItem(id, item) {
-    try {
-        const response = await fetch(`/api/items/${id}`, {
-            method: 'PUT',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(item)
-        });
-        
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || 'Failed to update item');
-        }
-        
-        const updatedItem = await response.json();
-        
-        // Hide the edit form
-        hideEditForm();
-        
-        // Reload items
-        loadItems();
-        
-        showMessage('Item updated successfully', 'success');
-    } catch (error) {
-        showMessage(error.message, 'danger');
-        console.error(`Error updating item ${id}:`, error);
-    }
-}
-
-async function deleteItem(id) {
-    if (!confirm('Are you sure you want to delete this item?')) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`/api/items/${id}`, {
-            method: 'DELETE'
-        });
-        
-        if (!response.ok) {
-            throw new Error('Failed to delete item');
-        }
-        
-        // Remove the item from the UI
-        document.getElementById(`item-${id}`).remove();
-        
-        // Check if there are no more items
-        const itemsList = document.getElementById('items-list');
-        if (itemsList.children.length === 0) {
-            document.getElementById('no-items').style.display = 'block';
-        }
-        
-        showMessage('Item deleted successfully', 'success');
-    } catch (error) {
-        showMessage(error.message, 'danger');
-        console.error(`Error deleting item ${id}:`, error);
-    }
-}
+// UI Functions to handle state changes
 
 // UI Functions
 function displayItems(items) {
     const itemsList = document.getElementById('items-list');
+    if (!itemsList) return; // Exit if not on items page
+    
     const noItemsMessage = document.getElementById('no-items');
     
     // Clear the current list
@@ -217,15 +102,55 @@ function displayItems(items) {
             <td>${escapeHtml(item.date)}</td>
             <td>
                 <button class="btn btn-sm btn-warning me-1" onclick="showEditForm(${item.id})">Edit</button>
-                <button class="btn btn-sm btn-danger" onclick="deleteItem(${item.id})">Delete</button>
+                <button class="btn btn-sm btn-danger" onclick="confirmDeleteItem(${item.id})">Delete</button>
             </td>
         `;
         itemsList.appendChild(row);
     });
 }
 
+function handleUIStateChange(ui) {
+    // Handle loading state
+    const loadingIndicator = document.getElementById('loading-indicator');
+    if (loadingIndicator) {
+        loadingIndicator.style.display = ui.isLoading ? 'block' : 'none';
+    }
+    
+    // Handle edit state
+    if (ui.editingItemId !== null) {
+        showEditFormUI(ui.editingItemId);
+    } else {
+        hideEditForm();
+    }
+    
+    // Process messages
+    if (ui.messages && ui.messages.length > 0) {
+        // Only process the most recent message if it hasn't been displayed
+        const latestMessage = ui.messages[0];
+        const messageElements = document.querySelectorAll('.toast');
+        
+        // Check if this message is already displayed
+        let isDisplayed = false;
+        messageElements.forEach(el => {
+            if (el.dataset.messageId === String(latestMessage.id)) {
+                isDisplayed = true;
+            }
+        });
+        
+        if (!isDisplayed) {
+            showMessage(latestMessage.text, latestMessage.type, latestMessage.id);
+        }
+    }
+}
+
 async function showEditForm(id) {
-    const item = await getItem(id);
+    // Set editing state in AppState
+    AppState.setEditingItemId(id);
+}
+
+async function showEditFormUI(id) {
+    // This is called from the UI state handler
+    const item = await AppState.actions.getItem(id);
     if (!item) return;
     
     document.getElementById('edit-id').value = item.id;
@@ -241,11 +166,22 @@ async function showEditForm(id) {
 function hideEditForm() {
     document.getElementById('edit-container').style.display = 'none';
     document.getElementById('edit-form').reset();
+    
+    // Clear editing state in AppState
+    AppState.setEditingItemId(null);
 }
 
-function showMessage(message, type) {
+function confirmDeleteItem(id) {
+    if (confirm('Are you sure you want to delete this item?')) {
+        AppState.actions.deleteItem(id);
+    }
+}
+
+function showMessage(message, type, messageId) {
     const container = document.getElementById('message-container');
-    const id = `toast-${Date.now()}`;
+    if (!container) return;
+    
+    const id = messageId || `toast-${Date.now()}`;
     
     const toast = document.createElement('div');
     toast.id = id;
@@ -253,6 +189,7 @@ function showMessage(message, type) {
     toast.setAttribute('role', 'alert');
     toast.setAttribute('aria-live', 'assertive');
     toast.setAttribute('aria-atomic', 'true');
+    toast.dataset.messageId = id;
     
     toast.innerHTML = `
         <div class="d-flex">
@@ -271,12 +208,17 @@ function showMessage(message, type) {
     // Remove the toast from the DOM after it's hidden
     toast.addEventListener('hidden.bs.toast', function() {
         toast.remove();
+        // Also remove it from state if it was from state
+        if (messageId) {
+            AppState.removeMessage(messageId);
+        }
     });
 }
 
 // Helper function to escape HTML
 function escapeHtml(unsafe) {
-    return unsafe
+    if (unsafe === null || unsafe === undefined) return '';
+    return String(unsafe)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;")
